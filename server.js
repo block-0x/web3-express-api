@@ -16,10 +16,10 @@ if (typeof web3 !== 'undefined') {
 }
 
 // Global variables to represent Database
-var TODOS = {
-  'todo1': { 'task': 'build an API'},
-  'todo2': { 'task': '?????'},
-  'todo3': { 'task': 'profit!'},
+var TEST = {
+  'test1': { 'test': 'test'},
+  'test2': { 'test': 'test?'},
+  'test3': { 'test': 'test!'},
 };
 
 async function contractDeploy() {
@@ -33,9 +33,9 @@ async function contractDeploy() {
 // get test
 app.get('/test', (req, res) => {
   try {
-    res.status(200).send(TODOS);
+    res.status(200).send(TEST);
   } catch(e) {
-    res.status(500).send('Error fetching /todos');
+    res.status(500).send('Error fetching /test');
   }
 });
 
