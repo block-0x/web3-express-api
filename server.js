@@ -4,14 +4,10 @@ const app = express()
 const port = 8000;
 app.use(express.json())
 
-const mongodb = require('mongodb').MongoClient
-mongodb.connect(process.env.DB, { useUnifiedTopology: true }, async(err,client) => {
-  client.db('Cluster0')
-})
-
 const Web3 = require('web3');
 const contract = require('truffle-contract');
-const artifacts = require('./build/Inbox.json');
+// const artifacts = require('./build/Inbox.json');
+const hello = require('./build/contracts/Hello.json');
 
 if (typeof web3 !== 'undefined') {
     var web3 = new Web3(web3.currentProvider)
@@ -22,7 +18,7 @@ if (typeof web3 !== 'undefined') {
 async function contractDeploy() {
   console.log('contractdeploy')
 
-  const LMS = contract(artifacts)
+  const LMS = contract(hello)
   LMS.setProvider(web3.currentProvider)  
   await LMS.deployed();
 }
@@ -91,6 +87,11 @@ app.post('/getaccounts', (req, res) => {
     res.status(500).send('Error fetching /getaccounts');
   }
 });
+
+const mongodb = require('mongodb').MongoClient
+mongodb.connect(process.env.DB, { useUnifiedTopology: true }, async(err,client) => {
+  client.db('Cluster0')
+})
 
 app.listen(port, () => {
   console.log("Server listening on port " + port);
