@@ -9,7 +9,7 @@ const contract = require('truffle-contract');
 
 const infuraEp = process.env.ADDRESS || '';
 
-const hello = require('./build/contracts/Hello.json');
+const hello = require('../build/contracts/Hello.json');
 const contractAddress = process.env.CONTRACT_ADDRESS
 const accountAddress = process.env.ACCOUNT_ADDRESS;
 const abi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"getMessage","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"nonpayable","type":"function"}]
@@ -17,7 +17,7 @@ const abi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{
 if (typeof web3 !== 'undefined') {
     var web3 = new Web3(web3.currentProvider)
   } else {
-    var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
+    var web3 = new Web3(new Web3.providers.HttpProvider(process.env.HTTPPROVIDER))
 }
 
 async function getContract() {
@@ -47,7 +47,6 @@ async function getAccounts() {
   console.log('getAccounts')
 
   const accounts = await web3.eth.getAccounts();
-  console.log(accounts)
   return accounts
 }
 
@@ -81,12 +80,15 @@ app.post('/createaccount', (req, res) => {
 });
 
 // post: get accounts
-app.post('/getaccounts', (req, res) => {
-
+app.post('/getaccounts', async (req, res) => {
   try {
-    res.status(200).send(getAccounts());
+    const data = await getAccounts()
+
+    return res.send({
+      data: data
+    })
   } catch(e) {
-    res.status(500).send('Error fetching /getaccounts');
+    res.status(500).send('Error fetching /contractdo');
   }
 });
 
@@ -97,16 +99,6 @@ app.post('/getcontracttest', (req, res) => {
     res.status(200).send(getContract());
   } catch(e) {
     res.status(500).send('Error fetching /getcontracttest');
-  }
-});
-
-// post: contract do
-app.post('/contractdo', (req, res) => {
-
-  try {
-    res.status(200).send(getAccounts());
-  } catch(e) {
-    res.status(500).send('Error fetching /contractdo');
   }
 });
 
